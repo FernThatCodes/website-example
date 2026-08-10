@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews | Bistro 42</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap');
+
+        :root {
+            --bg-color: #f4eedc;
+            --text-main: #3a322b;
+            --text-muted: #796e62;
+            --accent: #c46851;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Navigation (Lighter Espresso) */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(75, 67, 58, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--bg-color);
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-center a {
+            text-decoration: none;
+            color: rgba(244, 238, 220, 0.7);
+            margin: 0 1.5rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-center a:hover, .nav-center a.active {
+            color: var(--bg-color);
+        }
+
+        /* Fixed Button Specificity */
+        a.btn-reserve, .nav-center a.btn-reserve {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        a.btn-reserve:hover, .nav-center a.btn-reserve:hover {
+            background-color: var(--accent);
+            color: var(--bg-color);
+        }
+
+        /* Hero Section */
+        header.hero {
+            padding: 12rem 5% 6rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            margin: 0 0 1rem 0;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Reviews Grid Layout */
+        .reviews-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 5% 8rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        /* Review Card Styling & Animation */
+        .review-card {
+            background: rgba(255, 255, 255, 0.4);
+            padding: 3rem 2.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(121, 110, 98, 0.15);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .review-card.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stars {
+            color: var(--accent);
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+        }
+
+        .review-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-style: italic;
+            line-height: 1.8;
+            color: var(--text-main);
+            margin-bottom: 2rem;
+        }
+
+        .reviewer-name {
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--text-main);
+            color: var(--bg-color);
+            text-align: center;
+            padding: 2.5rem 5%;
+        }
+
+        footer h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            color: var(--bg-color);
+        }
+
+        .contact-info {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .contact-info p {
+            color: rgba(244, 238, 220, 0.7);
+            font-size: 1.05rem;
+            margin: 0.75rem 0;
+            line-height: 1.6;
+        }
+
+        .contact-info strong {
+            color: var(--bg-color);
+            font-weight: 500;
+        }
+
+        .map-link {
+            color: rgba(244, 238, 220, 0.7);
+            text-decoration: underline;
+            text-decoration-color: rgba(244, 238, 220, 0.3);
+            text-underline-offset: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .map-link:hover {
+            color: var(--bg-color);
+            text-decoration-color: var(--bg-color);
+        }
+
+        /* Mobile Menu Base Styles */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--bg-color);
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .mobile-only {
+            display: none;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            /* Show hamburger, hide desktop button */
+            .hamburger { display: block; }
+            .desktop-only { display: none; }
+            .mobile-only { display: inline-block; margin: 1rem auto; }
+
+            /* Dropdown menu styling */
+            .nav-center {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: rgba(75, 67, 58, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 1.5rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+
+            .nav-center.show-menu {
+                display: flex;
+            }
+
+            .nav-center a {
+                margin: 1rem 0;
+                font-size: 1.25rem;
+                text-align: center;
+            }
+
+            .reviews-container {
+                padding: 1rem 5% 5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">Your Logo</a>
+
+        <div class="nav-center" id="mobileMenu">
+            <a href="index.html">About Us</a>
+            <a href="menu.html">Menu</a>
+            <a href="reviews.html" class="active">Reviews</a>
+            <a href="#contact" class="btn-reserve mobile-only">Reserve</a>
+        </div>
+
+        <a href="#contact" class="btn-reserve desktop-only">Reserve</a>
+        <button class="hamburger" id="hamburgerBtn">☰</button>
+    </nav>
+
+    <header class="hero">
+        <h1>Guest Experiences</h1>
+        <p class="subtitle">Don't just take our word for it. Read what our community has to say about their time at our table.</p>
+    </header>
+
+    <div class="reviews-container">
+
+        <div class="review-card">
+            <div class="stars">★★★★★</div>
+            <p class="review-text">"An absolute triumph. The truffle and mushroom pizza is quite possibly the best I've had outside of Italy. The ambiance is warm, inviting, and effortlessly chic."</p>
+            <p class="reviewer-name">— Sarah Jenkins, Local Guide</p>
+        </div>
+
+        <div class="review-card">
+            <div class="stars">★★★★★</div>
+            <p class="review-text">"From the moment we walked in, the hospitality was unmatched. Chef Rossi's handmade gnocchi melts in your mouth. This is officially our new favorite spot for date night."</p>
+            <p class="reviewer-name">— Marcus T.</p>
+        </div>
+
+        <div class="review-card">
+            <div class="stars">★★★★★</div>
+            <p class="review-text">"Incredible attention to detail. The espresso martinis were perfectly balanced, and the rustic charm of the dining room made us feel like we were transported to another era."</p>
+            <p class="reviewer-name">— Emily R., Food Blogger</p>
+        </div>
+
+        <div class="review-card">
+            <div class="stars">★★★★★</div>
+            <p class="review-text">"A hidden gem! It's rare to find a place that balances a luxury dining experience with such a relaxed, neighborhood feel. We will definitely be coming back."</p>
+            <p class="reviewer-name">— David & Lisa M.</p>
+        </div>
+
+    </div>
+
+    <footer id="contact">
+        <h2>Location & Hours</h2>
+        <div class="contact-info">
+            <p><strong>Call Us:</strong> <br> (647) 123-4567</p>
+
+            <p><strong>Email Us:</strong> <br> reservations@email.example.com</p>
+
+            <p><strong>Hours:</strong> <br>
+               Tuesday – Sunday: 5:00 PM – 10:30 PM <br>
+               Monday: Closed
+            </p>
+
+            <p><strong>Visit Us:</strong> <br>
+                <a href="https://maps.google.com/?q=42+Culinary+Lane,+New+York,+NY+10012" target="_blank" class="map-link">
+                    42 Culinary Lane, Food District, NY 10012
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll Fade-in Animation for Review Cards
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.review-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Mobile Menu Toggle
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        hamburgerBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('show-menu');
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bistro 42 | Artisan Menu</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap');
+
+        :root {
+            --bg-color: #f4eedc;
+            --text-main: #3a322b;
+            --text-muted: #796e62;
+            --accent: #c46851;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Navigation (Lighter Espresso) */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(75, 67, 58, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--bg-color);
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-center a {
+            text-decoration: none;
+            color: rgba(244, 238, 220, 0.7);
+            margin: 0 1.5rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-center a:hover, .nav-center a.active {
+            color: var(--bg-color);
+        }
+
+        /* Fixed Button Specificity */
+        a.btn-reserve, .nav-center a.btn-reserve {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        a.btn-reserve:hover, .nav-center a.btn-reserve:hover {
+            background-color: var(--accent);
+            color: var(--bg-color);
+        }
+
+        /* Hero Section */
+        header.hero {
+            padding: 12rem 5% 6rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            margin: 0 0 1rem 0;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Scrolling Menu Layout */
+        .menu-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
+
+        .menu-section {
+            display: flex;
+            gap: 4rem;
+            margin-bottom: 10rem;
+            align-items: flex-start;
+        }
+
+        .menu-section:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        /* Cinematic Hover Effect */
+        .image-col {
+            flex: 1;
+            position: sticky;
+            top: 120px;
+            height: 75vh;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        }
+
+        .image-col img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 1.5s ease;
+        }
+
+        .image-col:hover img {
+            transform: scale(1.08);
+        }
+
+        /* Scrolling Text */
+        .text-col {
+            flex: 1;
+            padding-top: 2rem;
+            padding-bottom: 30vh;
+        }
+
+        .category-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            border-bottom: 1px solid rgba(121, 110, 98, 0.2);
+            padding-bottom: 1rem;
+        }
+
+        /* Menu Items & Animation Setup */
+        .menu-item {
+            margin-bottom: 4.5rem;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .menu-item.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.75rem;
+        }
+
+        .item-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .item-price {
+            font-weight: 500;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        .item-desc {
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--text-main);
+            color: var(--bg-color);
+            text-align: center;
+            padding: 2.5rem 5%;
+        }
+
+        footer h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            color: var(--bg-color);
+        }
+
+        .contact-info {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .contact-info p {
+            color: rgba(244, 238, 220, 0.7);
+            font-size: 1.05rem;
+            margin: 0.75rem 0;
+            line-height: 1.6;
+        }
+
+        .contact-info strong {
+            color: var(--bg-color);
+            font-weight: 500;
+        }
+
+        .map-link {
+            color: rgba(244, 238, 220, 0.7);
+            text-decoration: underline;
+            text-decoration-color: rgba(244, 238, 220, 0.3);
+            text-underline-offset: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .map-link:hover {
+            color: var(--bg-color);
+            text-decoration-color: var(--bg-color);
+        }
+
+        /* Mobile Menu Base Styles */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--bg-color);
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .mobile-only {
+            display: none;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .menu-section, .menu-section:nth-child(even) {
+                flex-direction: column;
+            }
+            .image-col {
+                position: relative;
+                top: 0;
+                height: 40vh;
+                margin-bottom: 2rem;
+            }
+            .text-col {
+                padding-bottom: 4rem;
+            }
+
+            /* Show hamburger, hide desktop button */
+            .hamburger { display: block; }
+            .desktop-only { display: none; }
+            .mobile-only { display: inline-block; margin: 1rem auto; }
+
+            /* Dropdown menu styling */
+            .nav-center {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: rgba(75, 67, 58, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 1.5rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+
+            .nav-center.show-menu {
+                display: flex;
+            }
+
+            .nav-center a {
+                margin: 1rem 0;
+                font-size: 1.25rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">Your Logo</a>
+
+        <div class="nav-center" id="mobileMenu">
+            <a href="index.html">About Us</a>
+            <a href="menu.html" class="active">Menu</a>
+            <a href="reviews.html">Reviews</a>
+            <a href="#contact" class="btn-reserve mobile-only">Reserve</a>
+        </div>
+
+        <a href="#contact" class="btn-reserve desktop-only">Reserve</a>
+        <button class="hamburger" id="hamburgerBtn">☰</button>
+    </nav>
+
+    <header class="hero">
+        <h1>Our Menu</h1>
+        <p class="subtitle">Locally sourced ingredients, prepared with passion. Scroll down to explore our seasonal offerings.</p>
+    </header>
+
+    <div class="menu-container">
+
+        <!-- SECTION 1: PIZZA -->
+        <section class="menu-section">
+            <div class="image-col">
+                <img src="https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcTxMOy3pbJZvgxvhj4kHn4bRSzDlcDkdU42T7KzRuj7xr-Gyk_9YU7ymioK7JZNYmsJQrHa5SRi_rhu5tM" alt="Wood fired Margherita Pizza">
+            </div>
+
+            <div class="text-col">
+                <h2 class="category-title">Wood-Fired Pizza</h2>
+
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h3 class="item-name">Classic Margherita</h3>
+                        <span class="item-price">$18</span>
+                    </div>
+                    <p class="item-desc">San Marzano tomato sauce, fresh mozzarella di bufala, basil, and extra virgin olive oil.</p>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h3 class="item-name">Spicy Diavola</h3>
+                        <span class="item-price">$22</span>
+                    </div>
+                    <p class="item-desc">Crushed tomatoes, mozzarella, spicy Calabrian salami, chili flakes, and hot honey drizzle.</p>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h3 class="item-name">Truffle & Mushroom</h3>
+                        <span class="item-price">$24</span>
+                    </div>
+                    <p class="item-desc">White base with roasted wild mushrooms, fontina cheese, thyme, and white truffle oil.</p>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h3 class="item-name">Prosciutto & Arugula</h3>
+                        <span class="item-price">$23</span>
+                    </div>
+                    <p class="item-desc">Mozzarella base finished with 18-month aged prosciutto, fresh baby arugula, and shaved parmesan.</p>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h3 class="item-name">Burrata & Pesto</h3>
+                        <span class="item-price">$25</span>
+                    </div>
+                    <p class="item-desc">House-made basil pesto base, cherry tomatoes, pine nuts, and a whole fresh burrata ball broken table-side.</p>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h3 class="item-name">The Forager</h3>
+                        <span class="item-price">$21</span>
+                    </div>
+                    <p class="item-desc">Caramelized onions, gorgonzola cheese, fresh figs, and a balsamic reduction drizzle.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: PASTA -->
+        <section class="menu-section">
+            <div class="image-col">
+                <img src="https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQWDdgU78Wk8bG-qmmKiqfiGaPGDXTWPM7t0O-xv-0oBik--MsN3D8rSO-Sy8Q9wKy4T43AOFVP8fhtfQA" alt="Fresh Handcrafted Pasta">
+            </div>
+
+            <div class="text-col">
+                <h2 class="category-title">Handcrafted Pasta</h2>
+
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h3 class="item-name">Rigatoni Bolognese</h3>
+                        <span class="item-price">$24</span>
+                    </div>
+                    <p class="item-desc">Slow-cooked beef and pork ragu, San Marzano tomatoes, finished with pecorino romano.</p>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h3 class="item-name">Cacio e Pepe</h3>
+                        <span class="item-price">$20</span>
+                    </div>
+                    <p class="item-desc">Fresh tonnarelli pasta tossed in a creamy emulsion of pecorino cheese and toasted black pepper.</p>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h3 class="item-name">Seafood Linguine</h3>
+                        <span class="item-price">$28</span>
+                    </div>
+                    <p class="item-desc">Clams, mussels, and shrimp in a light white wine and garlic sauce with fresh parsley.</p>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h3 class="item-name">Brown Butter Gnocchi</h3>
+                        <span class="item-price">$22</span>
+                    </div>
+                    <p class="item-desc">House-made potato gnocchi pan-seared with sage, brown butter, and toasted pine nuts.</p>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h3 class="item-name">Spicy Vodka Pappardelle</h3>
+                        <span class="item-price">$23</span>
+                    </div>
+                    <p class="item-desc">Wide ribbon pasta tossed in our signature spicy Calabrian chili vodka sauce with heavy cream.</p>
+                </div>
+
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h3 class="item-name">Squid Ink Spaghetti</h3>
+                        <span class="item-price">$27</span>
+                    </div>
+                    <p class="item-desc">Black spaghetti with jumbo lump crab meat, cherry tomatoes, and a kick of red pepper flakes.</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <h2>Location & Hours</h2>
+        <div class="contact-info">
+            <p><strong>Call Us:</strong> <br> (647) 123-4567</p>
+
+            <p><strong>Email Us:</strong> <br> reservations@email.example.com</p>
+
+            <p><strong>Hours:</strong> <br>
+               Tuesday – Sunday: 5:00 PM – 10:30 PM <br>
+               Monday: Closed
+            </p>
+
+            <p><strong>Visit Us:</strong> <br>
+                <a href="https://maps.google.com/?q=42+Culinary+Lane,+New+York,+NY+10012" target="_blank" class="map-link">
+                    42 Culinary Lane, Food District, NY 10012
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll Fade-in Animation
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.menu-item').forEach(item => {
+            observer.observe(item);
+        });
+
+        // Mobile Menu Toggle
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        hamburgerBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('show-menu');
+        });
+    </script>
+
+</body>
+</html>
